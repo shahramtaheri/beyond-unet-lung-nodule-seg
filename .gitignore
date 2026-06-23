@@ -1,0 +1,39 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Checkpoints & logs (these can be large; don't commit trained weights)
+checkpoints/
+*.pt
+*.pth
+runs/
+logs/
+wandb/
+
+# Data (never commit the actual dataset)
+data_raw/
+*.dcm
+*.nii
+*.nii.gz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Sandbox test configs
+configs/_sandbox_test.yaml

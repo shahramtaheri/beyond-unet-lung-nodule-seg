@@ -1,0 +1,62 @@
+# Default configuration for Beyond U-Net++ (Residual + Attention U-Net++)
+# Hyperparameters follow Section 4.3 ("Preprocessing Pipeline" / training
+# setup) and Section 4.2.5 ("Layer Configuration") of the paper.
+
+model:
+  in_channels: 1
+  out_channels: 1
+  # NOTE: with the literal filter progression stated in the paper
+  # (64, 128, 256, 512, bottleneck 1024) the full U-Net++ nested topology
+  # yields ~40M parameters, not the 9.8M/11.2M the paper reports for
+  # baseline/proposed. Using (32, 64, 128, 256) with a 512-filter
+  # bottleneck reproduces the paper's stated parameter budget (~10-11M)
+  # at the cost of literally matching the stated filter numbers. Both
+  # options are provided; pick via this config.
+  base_filters: [32, 64, 128, 256]   # paper text says [64, 128, 256, 512]; see note above
+  bottleneck_filters: 512            # paper text says 1024; see note above
+  dropout: 0.0
+  deep_supervision: false
+
+loss:
+  lambda_dice: 0.5
+  lambda_focal: 0.5
+  focal_alpha: 0.8     # not explicitly stated in the paper; common default
+  focal_gamma: 2.0      # not explicitly stated in the paper; common default
+  dice_eps: 1.0e-6
+
+optimizer:
+  name: adam
+  lr: 1.0e-4
+  weight_decay: 1.0e-5
+
+scheduler:
+  name: reduce_on_plateau
+  factor: 0.5
+  patience: 10
+  monitor: val_loss
+
+training:
+  max_epochs: 100
+  batch_size: 8
+  num_workers: 4  # set to 0 on machines with very limited CPU/RAM
+  early_stopping_patience: 15
+  early_stopping_monitor: val_dice
+  seed: 42
+  num_folds: 5
+  device: cuda
+  amp: true  # mixed precision; not specified in paper, optional speed-up
+
+data:
+  crop_size: 512
+  hu_min: -1000
+  hu_max: 400
+  mask_threshold: 0.5
+  voxel_spacing_mm: 1.0
+  min_radiologist_agreement: 3
+  min_nodule_diameter_mm: 3.0
+
+checkpoint:
+  out_dir: ./checkpoints
+  save_best_only: true
+  monitor: val_dice
+  mode: max
