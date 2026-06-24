@@ -2,7 +2,7 @@
 
 PyTorch implementation of the method described in *"Beyond U-Net++: Residual
 and Attention Enhancements for Precise Lung Nodule Segmentation"*
-(Golrizkhatami & Taheri).
+(S. Taheri).
 
 ## What this implements
 
